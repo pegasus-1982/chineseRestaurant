@@ -1,90 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Table</title>
-  <!-- Latest compiled and minified CSS & JS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="https://code.jquery.com/jquery.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+// Dependencies
+// =============================================================
+var express = require("express");
+var path = require("path");
 
-</head>
-<body>
+// Sets up the Express App
+// =============================================================
+var app = express();
 
-  <div class="container">
-    <div class="jumbotron">
-      <h1>Testaurante</h1>
-      <h3>Reservation!</h3>
-      <hr>
-      <a href="/"><button class="btn btn-danger btn-lg"><span class="fa fa-eye"></span> View Table</button></a>
-    </div>
-    <div class="row">
+var PORT = 3000;
 
-      <div class="col-12">
+//var PORT = process.env.PORT || 3000;
 
-        <div class="card">
-          <div class="card-header">
-            <h3><strong>Add Reservation</strong></h3>
-          </div>
-          <div class="card-body">
-            <form method="POST" role="form">
-              routeName: "1",
-              customerName: "Ahmed",
-              customerEmail: "ahmed@example.com",
-              customerID: ahmed@example.com,
-              phoneNumber: 000-000-0000
-              <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name">
-              </div>
+// Sets up the Express app to handle data parsing
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-              <div class="form-group">
-                <label for="role">RoleEmail</label>
-                <input type="text" class="form-control" id="roleEmail">
-              </div>
+// Star Wars table (DATA)
+// =============================================================
+var table = [
+  {
 
-              <div class="form-group">
-                <label for="age">Age</label>
-                <input type="text" class="form-control" id="age">
-              </div>
+    routeName: "ahmed",
+    name: "Ahmed",
+    role: "ahmed@example.com",
+    age: 1,
+    forcePoints: 000-000-0000
+  },
 
-              <div class="form-group">
-                <label for="force-points">Force Points</label>
-                <input type="text" class="form-control" id="force-points">
-              </div>
+  {
 
-            </form>
-            <br>
-            <div class="text-right">
-              <button type="submit" class="btn btn-primary btn-md" id="add-btn"><span class="fa fa-fire"></span> Add to the Force</button>
-            </div>
-          </div>
-        </div>
+    routeName: "table2",
+    name: "Ahmed",
+    role: "ahmed@example.com",
+    age: 1,
+    forcePoints: 000-000-0000
+  },
 
-      </div>
-    </div>
-  </div>
+/*
+{
+  routeName: "1",
+customerName: "Ahmed",
+customerEmail: "ahmed@example.com",
+customerID: ahmed@example.com,
+phoneNumber: 000-000-0000
+},
+{
+  routeName: "2",
+  customerName: "Prueba",
+  customerEmail: "fake@gmal.com",
+  customerID: 2,
+  phoneNumber: 5555 5555
+  },
 
-  <script type="text/javascript">
-    // Question: What does this code do?
-    $("#add-btn").on("click", function(event) {
-      event.preventDefault();
-      var newCharacter = {
-        name: $("#name").val().trim(),
-        role: $("#role").val().trim(),
-        age: $("#age").val().trim(),
-        forcePoints: $("#force-points").val().trim()
-      };
+*/
+];
 
-      // Question: What does this code do??
-      $.post("/api/characters", newCharacter)
-        .then(function(data) {
-          console.log("add.html", data);
-          alert("Adding character...");
-        });
-    });
-  </script>
+// Routes
+// =============================================================
 
-</body>
-</html>
+// Basic route that sends the user first to the AJAX Page
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname, "view.html"));
+});
+
+app.get("/add", function(req, res) {
+  res.sendFile(path.join(__dirname, "add.html"));
+});
+
+app.get("/tables", function(req, res) {
+  res.sendFile(path.join(__dirname, "tables.html"));
+});
+
+// Displays all table
+app.get("/api/table", function(req, res) {
+  return res.json(table);
+});
+
+// Displays table object, or returns false
+app.get("/api/table/:table", function(req, res) {
+  var chosen = req.params.table;
+
+  console.log(chosen);
+
+  for (var i = 0; i < table.length; i++) {
+    if (chosen === table[i].routeName) {
+      return res.json(table[i]);
+    }
+  }
+
+  return res.json(false);
+});
+
+// Create New table - takes in JSON input
+app.post("/api/table", function(req, res) {
+  // req.body hosts is equal to the JSON post sent from the user
+  // This works because of our body parsing middleware
+  var newTable = req.body;
+
+  // Using a RegEx Pattern to remove spaces from newTable
+  // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
+  newTable.routeName = newTable.name.replace(/\s+/g, "").toLowerCase();
+
+  console.log(newTable);
+
+  table.push(newTable);
+
+  res.json(newTable);
+});
+
+// Starts the server to begin listening
+// =============================================================
+app.listen(PORT, function() {
+  console.log("App listening on PORT " + PORT);
+});

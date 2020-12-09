@@ -1,0 +1,24 @@
+{
+  "name": "restaurante-chino",
+  "version": "1.0.0",
+  "description": "This app helps you book a reservation in our chinese restaurant",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pegasus-1982/chineseRestaurant.git"
+  },
+  "author": "Raquel, Francisco, Luis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pegasus-1982/chineseRestaurant/issues"
+  },
+  "homepage": "https://github.com/pegasus-1982/chineseRestaurant#readme"
+}
